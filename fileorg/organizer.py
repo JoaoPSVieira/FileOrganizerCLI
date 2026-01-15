@@ -1,23 +1,26 @@
 import sys
 from pathlib import Path
 
-def convert_paths(args):
-    origem = Path(args.source)
-    destino = Path(args.dest)
+def verify_path(caminho, verify_dir = False):
+    caminho = Path(caminho)
 
-    # Verificar se o caminho origem e destino existem
-    if not origem.exists():
-        error_fatal(f"O caminho origem não existe: {origem}", 1)
-    elif not destino.exists():
-        error_fatal(f"O caminho destino não existe: {destino}", 1)
+    # Verificar se o caminho existe
+    path_exists(caminho)
 
-    # Verificar se o caminho origem e destino são pastas
-    elif not origem.is_dir():
-        error_fatal(f"O caminho origem não é uma pasta!", 1)
-    elif not destino.is_dir():
-        error_fatal(f"O caminho destino não é uma pasta!", 1)
+    if verify_dir:
+        # Verificar se o caminho é pasta
+        path_is_dir(caminho)
 
-def error_fatal(mensagem, exitCode):
+# Verifica se um caminho existe
+def path_exists(caminho):
+    if not caminho.exists():
+        fatal_error(f"O caminho não existe: {caminho}", 1)
+
+# Verifica se um caminho é uma pasta
+def path_is_dir(caminho):
+    if not caminho.is_dir():
+        fatal_error(f"O caminho destino não é uma pasta!", 1)
+
+def fatal_error(mensagem, exitCode):
     print(f"Ocorreu um ERRO: {mensagem}", file=sys.stderr)
     sys.exit(exitCode)
-    

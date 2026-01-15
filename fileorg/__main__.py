@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from .organizer import convert_paths
+from .organizer import verify_path
 
 
 def parse_args(*arguments):
@@ -47,11 +47,13 @@ def parse_args(*arguments):
 
     args = parser.parse_args()
 
-    # Se o destino estiver vazio
+    # Se o destino estiver vazio, usa o mesmo caminho do que o source
     if args.dest is None:
         args.dest = args.source
     
-    convert_paths(args)
+    # Converte o caminho em Paths e verifica se existem e se são directórios
+    verify_path(args.source, True)
+    verify_path(args.dest, True)
     
     # TODO - Remover
     print(f"""
