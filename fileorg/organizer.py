@@ -10,6 +10,9 @@ def verify_path(caminho, verify_dir = False):
     if verify_dir:
         # Verificar se o caminho é pasta
         path_is_dir(caminho)
+    
+    # Retorna o caminho convertido em Path
+    return caminho
 
 # Verifica se um caminho existe
 def path_exists(caminho):

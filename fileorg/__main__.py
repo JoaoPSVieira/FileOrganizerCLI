@@ -51,10 +51,14 @@ def parse_args(*arguments):
     if args.dest is None:
         args.dest = args.source
     
-    # Converte o caminho em Paths e verifica se existem e se são directórios
-    verify_path(args.source, True)
-    verify_path(args.dest, True)
-    
+    # Converte o source e dest em Paths, verificando antes disso se existem e se são directórios
+    args.source = verify_path(args.source, True)
+    args.dest = verify_path(args.dest, True)
+
+    # Verifica se o ficheiros de configuração foi passado com argumento e, se sim, converte-lo em Path
+    if args.config is not None:
+        args.config = verify_path(args.config)
+
     # TODO - Remover
     print(f"""
         Source:         {args.source}
