@@ -2,6 +2,7 @@ import argparse
 
 from .organizer import verify_path
 from .config import load_config
+from .organizer import organize_folder
 
 def parse_args(*arguments):
     parser = argparse.ArgumentParser()
@@ -61,15 +62,8 @@ def parse_args(*arguments):
     # Carrega a configuração que irá ser utilizada para a organizadas dos ficheiros
     args.config = load_config(args.config)
 
-    # TODO - Remover
-    print(f"""
-        Source:         {args.source}
-        Destination:    {args.dest}
-        Dry-Run:        {args.dry_run}
-        Recursive:      {args.recursive}
-        Config:         {args.config}
-        Unknown:        {args.unknown}
-        """)
+    # Função principal, organização de ficheiros
+    organize_folder(args)
 
 def main(*arguments):
     parse_args(arguments)

@@ -1,6 +1,27 @@
 import sys
 from pathlib import Path
 
+def organize_folder(args):
+    source = args.source
+    destination = args.dest
+    mode = args.mode
+    dry_run = args.dry_run
+    recursive = args.recursive
+    config = args.config
+    unknown = args.unknown
+
+    # TODO - Remover
+    print(f"""
+        Source:         {source}
+        Destination:    {destination}
+        Mode:           {mode}
+        Dry-Run:        {dry_run}
+        Recursive:      {recursive}
+        Config:         {config}
+        Unknown:        {unknown}
+    """)
+
+
 def verify_path(caminho, verify_dir = False):
     caminho = Path(caminho)
 
