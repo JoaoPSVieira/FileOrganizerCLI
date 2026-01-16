@@ -13,5 +13,6 @@ DEFAULT_RULES = {
 
 def load_config(path=None):
     if path:
-        rules = json.loads(DEFAULT_RULES)
-    print(rules)
+        with open(path, "r") as f:
+            return json.load(f)
+    return DEFAULT_RULES

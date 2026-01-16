@@ -1,0 +1,11 @@
+{
+    "Images": ["bmp", "tiff", "svg", "heic"],
+    "Texts": ["txt", "rtf", "odt", "md"],
+    "Spreadsheets": ["xls", "xlsx", "csv", "ods"],
+    "Presentations": ["ppt", "pptx", "odp"],
+    "Compressed": ["zip", "rar", "tar", "xz"],
+    "Music": ["aac", "ogg", "m4a"],
+    "Movies": ["mp4", "mov", "webm"],
+    "Scripts": ["sh", "bat", "ps1"],
+    "Other": []
+}  
