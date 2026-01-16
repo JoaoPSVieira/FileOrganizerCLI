@@ -1,8 +1,7 @@
 import argparse
-from pathlib import Path
 
 from .organizer import verify_path
-
+from .config import load_config
 
 def parse_args(*arguments):
     parser = argparse.ArgumentParser()
@@ -58,6 +57,9 @@ def parse_args(*arguments):
     # Verifica se o ficheiros de configuração foi passado com argumento e, se sim, converte-lo em Path
     if args.config is not None:
         args.config = verify_path(args.config)
+
+    # Carrega a configuração que irá ser utilizada para a organizadas dos ficheiros
+    args.config = load_config(args.config)
 
     # TODO - Remover
     print(f"""
