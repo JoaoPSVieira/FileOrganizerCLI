@@ -25,11 +25,13 @@ def organize_folder(args):
     # Variáveis auxiliares para ajudar na organização dos ficheiros
     recursive_folders, folders_to_ignore = [source], [source]
 
+    # Define se é para mover ou copiar. Apenas para alterar o texto no report
+    report.moved_or_copied(args.mode)
+
     # Itera cada pasta por níveis (Nivel 1, 2, ...)
     for folder in recursive_folders:
         # Percorre cada ficheiro da pasta atual
         for file in folder.iterdir():
-            report.increase_analized_files()
 
             # Se a recursividade não estiver ativada 
             if not recursive and file.is_dir():
@@ -41,6 +43,8 @@ def organize_folder(args):
                 recursive_folders.append(file);
                 continue
 
+            # Incrementa em 1 a contagem de ficheiros analizados (Excluíndo pastas)
+            report.increase_analized_files()
 
             # Pega a extensão sem o ponto (Padrão definido inicialmente)
             extension = file.suffix[1:]
