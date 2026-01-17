@@ -6,6 +6,6 @@
     "Compressed": ["zip", "rar", "tar", "xz"],
     "Music": ["aac", "ogg", "m4a"],
     "Movies": ["mp4", "mov", "webm"],
-    "Scripts": ["sh", "bat", "ps1", "py"],
+    "Scripts": ["sh", "bat", "ps1", "py", "json"],
     "Other": []
 }  
