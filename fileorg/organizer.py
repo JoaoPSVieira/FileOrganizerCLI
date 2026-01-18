@@ -74,7 +74,7 @@ def organize_folder(args):
 
     
     # TODO - Remover Debug
-    ''' print(f"""
+    print(f"""
         {"*" * 20}
         Source:         {source}
         Destination:    {destination}
@@ -84,34 +84,31 @@ def organize_folder(args):
         Config:         {config}
         Unknown:        {unknown}
         {"*" * 20}
-    """) '''
+    """)
 
     report.print_all()
 
 def store_file(args, file, folder):
-    if not args.dry_run:
-        # Cria a nova pasta, caso não exista
-        folder = args.dest / folder
-        folder.mkdir(exist_ok = True)
+    # Cria a nova pasta, caso não exista
+    folder = args.dest / folder
+    if not args.dry_run: folder.mkdir(exist_ok = True)
 
-        folders_to_ignore.append(folder)
+    folders_to_ignore.append(folder)
 
-        # Se a opção for mover, move o ficheiro para a nova pasta, caso contrário, copia para a nova pasta
-        move_file(file, folder) if args.mode == "move" else copy_file(file, folder)
-    else:
-        print("Falta fazer a lógica")
+    # Se a opção for mover, move o ficheiro para a nova pasta, caso contrário, copia para a nova pasta
+    move_file(file, folder, args.dry_run) if args.mode == "move" else copy_file(file, folder, args.dry_run)
 
 # Armazenar um ficheiro numa pasta
-def move_file(file, folder):
+def move_file(file, folder, dry_run = False):
     new_location = verify_repeated_file(folder.joinpath(file.name))
-    file.replace(new_location)
+    if not dry_run: file.replace(new_location)
     report.moved_or_copied_files()
     report.add_category_files(folder.name())
     # print(f"Movido {file.name} para {folder}")
 
-def copy_file(file, folder):
+def copy_file(file, folder, dry_run):
     new_location = verify_repeated_file(folder.joinpath(file.name))
-    shutil.copy(file, new_location)
+    if not dry_run: shutil.copy(file, new_location)
     report.moved_or_copied_files()
     report.add_category_files(folder.stem)
     # print(f"Copiado {file.name} para {folder / file.name}")
