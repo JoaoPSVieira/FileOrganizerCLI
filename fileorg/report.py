@@ -8,23 +8,36 @@ class Report:
         self.mode = ""
     
     def moved_or_copied(self, mode):
-        self.mode = "movidos" if mode == "move" else self.mode == "copiados"
+        self.mode = "movidos" if mode == "move" else "copiados"
 
     def increase_analized_files(self):
         self.analized_files += 1
 
+    def moved_or_copied_files(self):
+        self.moved_copied_files += 1
+    
+    def increase_ignored_files(self):
+        self.ignored_files += 1
+    
+    def increase_errors(self):
+        self.errors += 1
+
+    def add_category_files(self, category):
+        if category not in self.files_per_category.keys():
+            self.files_per_category[category] = 0
+        self.files_per_category[category] += 1
+
     def print_files_per_category(self):
         result = ""
-        for categoria, quantidade in self.files_per_category.items():
-            result += f"{categoria} -> {quantidade} ficheiros\n"
+        for categoria, quantidade in sorted(self.files_per_category.items(), key=lambda item: item[1], reverse=True):
+            result += f"\t\t{categoria} -> {quantidade} ficheiros\n"
         return result
     
     def print_all(self):
         print(f"""
-            Nº total de ficheiros analizados: {self.analized_files}
-            Nº total de ficheiros {self.mode}: {self.moved_copied_files}
-            Nº total de ficheiros ignorados: {self.ignored_files}
-            Nº de erros: {self.errors}
-            Contagem por categoria:
-                {self.print_files_per_category()}
-        """)
+        • Nº total de ficheiros analizados: {self.analized_files}
+        • Nº total de ficheiros {self.mode}: {self.moved_copied_files}
+        • Nº total de ficheiros ignorados: {self.ignored_files}
+        • Nº de erros: {self.errors}
+        • Contagem por categoria:""")
+        print(f"{self.print_files_per_category()}")

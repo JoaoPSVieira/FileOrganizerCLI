@@ -35,6 +35,7 @@ def organize_folder(args):
 
             # Se a recursividade não estiver ativada 
             if not recursive and file.is_dir():
+                report.increase_ignored_files()
                 continue
 
             # Se o ficheiro for um directório, verifica se a opção recursive foi ativada, se
@@ -65,15 +66,15 @@ def organize_folder(args):
                     # --unknown extension   -> Cria uma pasta com a extensão do ficheiro,
                     # por exemplo: EXT_pdf ou EXT_rar
                     case "extension":
-                        print("Manda para pasta extension")
+                        store_file(args, file, f"EXT_{extension}")
                     # Caso default - Nunca irá ser alcançado porque o argparse nunca irá permitir
                     # outra opção mas é uma segurança extra
                     case _:
                         fatal_error("Opção não encontrada", 101)
 
     
-    # TODO - Remover
-    print(f"""
+    # TODO - Remover Debug
+    ''' print(f"""
         {"*" * 20}
         Source:         {source}
         Destination:    {destination}
@@ -83,7 +84,7 @@ def organize_folder(args):
         Config:         {config}
         Unknown:        {unknown}
         {"*" * 20}
-    """)
+    """) '''
 
     report.print_all()
 
@@ -102,15 +103,33 @@ def store_file(args, file, folder):
 
 # Armazenar um ficheiro numa pasta
 def move_file(file, folder):
-    new_location = folder.joinpath(file.name)
+    new_location = verify_repeated_file(folder.joinpath(file.name))
     file.replace(new_location)
-    print(f"Movido {file.name} in {folder}")
+    report.moved_or_copied_files()
+    report.add_category_files(folder.name())
+    # print(f"Movido {file.name} para {folder}")
 
 def copy_file(file, folder):
-    # new_location = folder.joinpath(file.name)
-    shutil.copy(file, folder / file.name)
-    print(f"Copiado {file.name} in {folder / file.name}")
+    new_location = verify_repeated_file(folder.joinpath(file.name))
+    shutil.copy(file, new_location)
+    report.moved_or_copied_files()
+    report.add_category_files(folder.stem)
+    # print(f"Copiado {file.name} para {folder / file.name}")
 
+def verify_repeated_file(path):
+    if not path.exists():
+        return path
+    
+    stem = path.stem        # nome do ficheiro sem a extensão
+    suffix = path.suffix    # extensão
+    parent = path.parent    # Pasta pai do ficheiro
+
+    i = 1
+    while True:
+        new_path = parent / f"{stem} ({i}){suffix}"
+        if not new_path.exists():
+            return new_path
+        i += 1
 
 def verify_path(caminho, verify_dir = False):
     caminho = Path(caminho)
