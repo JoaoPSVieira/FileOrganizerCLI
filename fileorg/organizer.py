@@ -48,8 +48,9 @@ def organize_folder(args):
             report.increase_analized_files()
 
             # Pega a extensão sem o ponto (Padrão definido inicialmente)
-            extension = file.suffix[1:]
+            extension = file.suffix[1:].lower()
             # Verifica se a extensão está nas configuração selecionada
+            print
             if extension in config.keys():
                 # print("Extensão:", extension) TODO
                 store_file(args, file, config[extension])
