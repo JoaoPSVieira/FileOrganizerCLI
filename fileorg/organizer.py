@@ -26,7 +26,7 @@ def organize_folder(args):
     recursive_folders, folders_to_ignore = [source], [source]
 
     # Define se é para mover ou copiar. Apenas para alterar o texto no report
-    report.moved_or_copied(args.mode)
+    report.moved_or_copied(mode)
 
     # Itera cada pasta por níveis (Nivel 1, 2, ...)
     for folder in recursive_folders:
@@ -34,13 +34,13 @@ def organize_folder(args):
         for file in folder.iterdir():
 
             # Se a recursividade não estiver ativada 
-            if not recursive and file.is_dir():
+            if not recursive and file.parent != source:
                 report.increase_ignored_files()
                 continue
 
             # Se o ficheiro for um directório, verifica se a opção recursive foi ativada, se
             # sim guardar o nome das pastas para aplicar-lhes depois recursividade
-            if recursive and file.is_dir() and file is not folders_to_ignore:
+            if recursive and file.is_dir() and file not in folders_to_ignore:
                 recursive_folders.append(file);
                 continue
 
@@ -75,7 +75,7 @@ def organize_folder(args):
 
     
     # TODO - Remover Debug
-    print(f"""
+    '''print(f"""
         {"*" * 20}
         Source:         {source}
         Destination:    {destination}
@@ -85,7 +85,7 @@ def organize_folder(args):
         Config:         {config}
         Unknown:        {unknown}
         {"*" * 20}
-    """)
+    """)'''
 
     report.print_all()
 
@@ -104,7 +104,7 @@ def move_file(file, folder, dry_run = False):
     new_location = verify_repeated_file(folder.joinpath(file.name))
     if not dry_run: file.replace(new_location)
     report.moved_or_copied_files()
-    report.add_category_files(folder.name())
+    report.add_category_files(folder.name)
     # print(f"Movido {file.name} para {folder}")
 
 def copy_file(file, folder, dry_run):
