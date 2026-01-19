@@ -40,8 +40,8 @@ def parse_args(*arguments):
     parser.add_argument("--unknown",
                         default="other",
                         choices=["skip", "other", "extension"],
-                        help="Permite que o utilizador escolha o que ffazer com os ficheiros não identificados. Existem três opções: "
-                        "Skip - Ingora os ficheros sem extensão/desconhecidos"
+                        help="Permite que o utilizador escolha o que fazer com os ficheiros não identificados. Existem três opções: "
+                        "Skip - Ignora os ficheiros sem extensão/desconhecidos"
                         "Other - Manda para uma pasta Other"
                         "Extension - Cria pasta com o nome da extensão (ex: EXT_pdf)")
 

@@ -1,3 +1,9 @@
+def string_box(texto):
+    largura = len(texto) + 4
+    print("\n", "\t" * 2, "*" * largura)
+    print(f"{"\t" * 2} * {texto} *")
+    print("\t" * 2, "*" * largura)
+
 class Report:
     def __init__(self):
         self.analized_files = 0
@@ -33,7 +39,9 @@ class Report:
             result += f"\t\t{categoria} -> {quantidade} ficheiros\n"
         return result
     
-    def print_all(self):
+    def print_all(self, dry_run):
+        if dry_run: string_box("SIMULAÇÃO")
+
         print(f"""
         • Nº total de ficheiros analizados: {self.analized_files}
         • Nº total de ficheiros {self.mode}: {self.moved_copied_files}

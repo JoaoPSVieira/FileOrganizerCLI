@@ -87,7 +87,7 @@ def organize_folder(args):
         {"*" * 20}
     """)'''
 
-    report.print_all()
+    report.print_all(dry_run)
 
 def store_file(args, file, folder):
     # Cria a nova pasta, caso não exista
