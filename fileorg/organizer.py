@@ -13,6 +13,8 @@ recursive_folders, folders_to_ignore = [], []
 report = Report()
 
 def organize_folder(args):
+    global recursive_folders, folders_to_ignore
+
     # Guardar os argumentos em variáveis para facilitar a leitura e escrita do código
     source = args.source
     destination = args.dest
@@ -23,7 +25,8 @@ def organize_folder(args):
     unknown = args.unknown
 
     # Variáveis auxiliares para ajudar na organização dos ficheiros
-    recursive_folders, folders_to_ignore = [source], [source]
+    recursive_folders = [source]
+    folders_to_ignore = [source, destination]
 
     # Define se é para mover ou copiar. Apenas para alterar o texto no report
     report.moved_or_copied(mode)
@@ -31,43 +34,43 @@ def organize_folder(args):
     # Itera cada pasta por níveis (Nivel 1, 2, ...)
     for folder in recursive_folders:
         # Percorre cada ficheiro da pasta atual
-        for file in folder.iterdir():
+        for entry in folder.iterdir():
 
-            # Se a recursividade não estiver ativada 
-            if not recursive and file.parent != source:
-                report.increase_ignored_files()
+            if entry.is_dir():
+                # se for um diretório, a recursividade estiver ativa e não está na "lista negra", 
+                # adicionar nas pastas para analizar recursivamente
+                if recursive and entry not in folders_to_ignore:
+                    recursive_folders.append(entry);
                 continue
-
-            # Se o ficheiro for um directório, verifica se a opção recursive foi ativada, se
-            # sim guardar o nome das pastas para aplicar-lhes depois recursividade
-            if recursive and file.is_dir() and file not in folders_to_ignore:
-                recursive_folders.append(file);
+        
+            if not entry.is_file():
                 continue
 
             # Incrementa em 1 a contagem de ficheiros analizados (Excluíndo pastas)
             report.increase_analized_files()
 
             # Pega a extensão sem o ponto (Padrão definido inicialmente)
-            extension = file.suffix[1:].lower()
+            extension = entry.suffix[1:].lower()
             # Verifica se a extensão está nas configuração selecionada
-            print
+            
             if extension in config.keys():
                 # print("Extensão:", extension) TODO
-                store_file(args, file, config[extension])
+                store_file(args, entry, config[extension])
             
             # Caso não tenha, decide o que fazer com base na opção --uknown
             else:
                 match unknown:
                     # --unknown skip -> Simplesmente ignora o ficheiro
                     case "skip":
+                        report.increase_ignored_files()
                         continue
                     # --unknown other || opção padrão -> Manda o ficheiro para uma pasta other
                     case "other":
-                        store_file(args, file, "Other")
+                        store_file(args, entry, "Other")
                     # --unknown extension   -> Cria uma pasta com a extensão do ficheiro,
                     # por exemplo: EXT_pdf ou EXT_rar
                     case "extension":
-                        store_file(args, file, f"EXT_{extension}")
+                        store_file(args, entry, f"EXT_{extension}")
                     # Caso default - Nunca irá ser alcançado porque o argparse nunca irá permitir
                     # outra opção mas é uma segurança extra
                     case _:
