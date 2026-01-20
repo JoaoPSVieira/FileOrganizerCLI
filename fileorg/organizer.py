@@ -54,7 +54,6 @@ def organize_folder(args):
             # Verifica se a extensão está nas configuração selecionada
             
             if extension in config.keys():
-                # print("Extensão:", extension) TODO
                 store_file(args, entry, config[extension])
             
             # Caso não tenha, decide o que fazer com base na opção --uknown
@@ -75,20 +74,6 @@ def organize_folder(args):
                     # outra opção mas é uma segurança extra
                     case _:
                         fatal_error("Opção não encontrada", 101)
-
-    
-    # TODO - Remover Debug
-    '''print(f"""
-        {"*" * 20}
-        Source:         {source}
-        Destination:    {destination}
-        Mode:           {mode}
-        Dry-Run:        {dry_run}
-        Recursive:      {recursive}
-        Config:         {config}
-        Unknown:        {unknown}
-        {"*" * 20}
-    """)'''
 
     report.print_all(dry_run)
 
@@ -114,12 +99,12 @@ def move_file(file, folder, dry_run = False):
     report.add_category_files(folder.name)
     # print(f"Movido {file.name} para {folder}")
 
-def copy_file(file, folder, dry_run):
+def copy_file(file, folder, dry_run=False):
     target = folder / file.name
     if file.resolve() == target.resolve():
         report.increase_ignored_files()
         return
-    new_location = verify_repeated_file(folder.joinpath(file.name))
+    new_location = verify_repeated_file(target, file)
     if not dry_run: shutil.copy(file, new_location)
     report.moved_or_copied_files()
     report.add_category_files(folder.name)

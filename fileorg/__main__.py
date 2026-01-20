@@ -4,7 +4,7 @@ from .organizer import verify_path
 from .config import load_config
 from .organizer import organize_folder
 
-def parse_args(*arguments):
+def parse_arguments():
     parser = argparse.ArgumentParser()
 
     # Opção --source
@@ -65,8 +65,8 @@ def parse_args(*arguments):
     # Função principal, organização de ficheiros
     organize_folder(args)
 
-def main(*arguments):
-    parse_args(arguments)
+def main():
+    parse_arguments()
 
 if __name__ == '__main__':
     main()

@@ -30,7 +30,3 @@ def invert_rules(rules):
             else:
                 extension_map[ext] = category
     return extension_map
-
-
-# TODO - Adicionar uma função para verificar se a configuração indicada pelo utilizador
-# é valida, ou seja, se não tem a mesma extensão em duas categorias diferentes, etc.
