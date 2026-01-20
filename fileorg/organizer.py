@@ -10,10 +10,9 @@ from .report import Report
 # Folders to ignore -> Guarda todas as pastas criadas pelo programa para evitar que, no caso da recursividade estar ativa, o programa entre num loop infinito ao organizar pastas que acabou de criar.
 recursive_folders, folders_to_ignore = [], []
 
-report = Report()
-
 def organize_folder(args):
     global recursive_folders, folders_to_ignore
+    report = Report()
 
     # Guardar os argumentos em variáveis para facilitar a leitura e escrita do código
     source = args.source
@@ -40,7 +39,7 @@ def organize_folder(args):
                 # se for um diretório, a recursividade estiver ativa e não está na "lista negra", 
                 # adicionar nas pastas para analizar recursivamente
                 if recursive and entry not in folders_to_ignore:
-                    recursive_folders.append(entry);
+                    recursive_folders.append(entry)
                 continue
         
             if not entry.is_file():
@@ -54,7 +53,7 @@ def organize_folder(args):
             # Verifica se a extensão está nas configuração selecionada
             
             if extension in config.keys():
-                store_file(args, entry, config[extension])
+                store_file(args, entry, config[extension], report)
             
             # Caso não tenha, decide o que fazer com base na opção --uknown
             else:
@@ -65,11 +64,11 @@ def organize_folder(args):
                         continue
                     # --unknown other || opção padrão -> Manda o ficheiro para uma pasta other
                     case "other":
-                        store_file(args, entry, "Other")
+                        store_file(args, entry, "Other", report)
                     # --unknown extension   -> Cria uma pasta com a extensão do ficheiro,
                     # por exemplo: EXT_pdf ou EXT_rar
                     case "extension":
-                        store_file(args, entry, f"EXT_{extension}")
+                        store_file(args, entry, f"EXT_{extension}", report)
                     # Caso default - Nunca irá ser alcançado porque o argparse nunca irá permitir
                     # outra opção mas é uma segurança extra
                     case _:
@@ -77,7 +76,7 @@ def organize_folder(args):
 
     report.print_all(dry_run)
 
-def store_file(args, file, folder):
+def store_file(args, file, folder, report):
     # Cria a nova pasta, caso não exista
     folder = args.dest / folder
     if not args.dry_run: folder.mkdir(exist_ok = True)
@@ -85,10 +84,10 @@ def store_file(args, file, folder):
     folders_to_ignore.append(folder)
 
     # Se a opção for mover, move o ficheiro para a nova pasta, caso contrário, copia para a nova pasta
-    move_file(file, folder, args.dry_run) if args.mode == "move" else copy_file(file, folder, args.dry_run)
+    move_file(file, folder, report, args.dry_run) if args.mode == "move" else copy_file(file, folder, report, args.dry_run)
 
 # Armazenar um ficheiro numa pasta
-def move_file(file, folder, dry_run = False):
+def move_file(file, folder, report, dry_run = False):
     target = folder / file.name
     if file.resolve() == target.resolve():
         report.increase_ignored_files()
@@ -99,7 +98,7 @@ def move_file(file, folder, dry_run = False):
     report.add_category_files(folder.name)
     # print(f"Movido {file.name} para {folder}")
 
-def copy_file(file, folder, dry_run=False):
+def copy_file(file, folder, report, dry_run=False):
     target = folder / file.name
     if file.resolve() == target.resolve():
         report.increase_ignored_files()
