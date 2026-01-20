@@ -104,21 +104,32 @@ def store_file(args, file, folder):
 
 # Armazenar um ficheiro numa pasta
 def move_file(file, folder, dry_run = False):
-    new_location = verify_repeated_file(folder.joinpath(file.name))
+    target = folder / file.name
+    if file.resolve() == target.resolve():
+        report.increase_ignored_files()
+        return
+    new_location = verify_repeated_file(target, file)
     if not dry_run: file.replace(new_location)
     report.moved_or_copied_files()
     report.add_category_files(folder.name)
     # print(f"Movido {file.name} para {folder}")
 
 def copy_file(file, folder, dry_run):
+    target = folder / file.name
+    if file.resolve() == target.resolve():
+        report.increase_ignored_files()
+        return
     new_location = verify_repeated_file(folder.joinpath(file.name))
     if not dry_run: shutil.copy(file, new_location)
     report.moved_or_copied_files()
-    report.add_category_files(folder.stem)
+    report.add_category_files(folder.name)
     # print(f"Copiado {file.name} para {folder / file.name}")
 
-def verify_repeated_file(path):
+def verify_repeated_file(path, file):
     if not path.exists():
+        return path
+    
+    if path.resolve() == file.resolve():
         return path
     
     stem = path.stem        # nome do ficheiro sem a extensão

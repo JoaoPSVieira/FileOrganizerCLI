@@ -42,7 +42,11 @@ class Report:
     def print_all(self, dry_run):
         if dry_run: string_box("SIMULAÇÃO")
 
-        print(f"""
+        if self.analized_files == self.ignored_files:
+            print("\n\tNenhuma alteração foi realizada")
+        
+        else: 
+            print(f"""
         • Nº total de ficheiros analizados: {self.analized_files}
         • Nº total de ficheiros {self.mode}: {self.moved_copied_files}
         • Nº total de ficheiros ignorados: {self.ignored_files}
