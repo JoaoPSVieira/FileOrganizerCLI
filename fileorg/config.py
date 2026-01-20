@@ -1,8 +1,9 @@
 import json
+from .organizer import fatal_error
 
 # Definição das regras padrão em caso de não especificação por parte do utilizador
 DEFAULT_RULES = {
-    "Imagens": [".jpg", "jpeg", "png", "gif", "webp"],
+    "Imagens": ["jpg", "jpeg", "png", "gif", "webp"],
     "Documentos": ["pdf", "docx", "txt", "md"],
     "Compactados": ["zip", "rar", "7z", "tar", "gz"],
     "Audio": ["mp3", "wav", "flac"],
@@ -14,8 +15,12 @@ DEFAULT_RULES = {
 # Escolhe entre a configuração padrão ou a escolhida pelo utilizador
 def load_config(path=None):
     if path:
-        with open(path, "r") as f:
-            return invert_rules(json.load(f))
+        try:
+            with open(path, "r") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as error:
+            fatal_error(f"Ocorreu um erro ao ler o ficheiro JSON - {error}", 3)
+        return invert_rules(data)
     return invert_rules(DEFAULT_RULES)
 
 # Inverte as regras para aumentar a eficiencia durante a organização dos ficheiros
@@ -26,7 +31,7 @@ def invert_rules(rules):
         for ext in extensions:
             # Se tiver um ponto irá ser removido e se tiver letras maiúsculas irá ser trocado por letras minúsculas
             if (ext[0] == "." or ext.isupper()):
-                extension_map[ext[1:].lower()] = category
+                extension_map[ext.lower().lstrip(".")] = category
             else:
                 extension_map[ext] = category
     return extension_map

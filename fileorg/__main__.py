@@ -40,7 +40,7 @@ def build_parser():
     parser.add_argument("--unknown",
                         default="other",
                         choices=["skip", "other", "extension"],
-                        help="Permite que o utilizador escolha o que fazer com os ficheiros não identificados. Existem três opções: "
+                        help="Permite que o utilizador escolha o que fazer com os ficheiros não identificados. Existem três opções: \n"
                         "Skip - Ignora os ficheiros sem extensão/desconhecidos"
                         "Other - Manda para uma pasta Other"
                         "Extension - Cria pasta com o nome da extensão (ex: EXT_pdf)")
