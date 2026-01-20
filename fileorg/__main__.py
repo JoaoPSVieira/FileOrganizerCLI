@@ -4,7 +4,7 @@ from .organizer import verify_path
 from .config import load_config
 from .organizer import organize_folder
 
-def parse_arguments():
+def build_parser():
     parser = argparse.ArgumentParser()
 
     # Opção --source
@@ -45,8 +45,13 @@ def parse_arguments():
                         "Other - Manda para uma pasta Other"
                         "Extension - Cria pasta com o nome da extensão (ex: EXT_pdf)")
 
-    args = parser.parse_args()
+    return parser
 
+def parse_arguments():
+    parser = build_parser()
+    return parser.parse_args()
+
+def validate_prepare_args(args):
     # Se o destino estiver vazio, usa o mesmo caminho do que o source
     if args.dest is None:
         args.dest = args.source
@@ -62,12 +67,14 @@ def parse_arguments():
     # Carrega a configuração que irá ser utilizada para a organizadas dos ficheiros
     args.config = load_config(args.config)
 
+    return args
+
+def main():
+    args = parse_arguments()
+    args = validate_prepare_args(args)
+    
     # Função principal, organização de ficheiros
     organize_folder(args)
 
-def main():
-    parse_arguments()
-
 if __name__ == '__main__':
     main()
-
