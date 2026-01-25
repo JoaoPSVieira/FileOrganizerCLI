@@ -1,5 +1,10 @@
 # FileOrganizerCLI
 
+É uma ferramenbto de linha comandos (CLI) desenvolvida em Python para organizar automaticamente ficheiros de uma pasta pela sua extensão. Este programa suporta uma configuração personalizada de organização, modo de simulação, organização recursiva e, no final, um relatório com detalhes no final da execução
+
+## Funcionalidades
+
+
 Versão Python: 3.12.0
 
 
